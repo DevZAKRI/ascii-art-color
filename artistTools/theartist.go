@@ -10,7 +10,7 @@ import (
 // It reads the file containing the ASCII graph representation and puts the content in asciiGraph.
 // If there is an error reading the file, it prints the error message and returns.
 // It splits the input string into lines using the "\\n" delimiter.
-func Artist(input string, template string) string {
+func Artist(input, template, color, substring string) string {
 	// check for errors too in case file no longer exist
 	asciiGraph, err := ReadFile("banners/" + template + ".txt")
 	if err != nil {
@@ -28,19 +28,29 @@ func Artist(input string, template string) string {
 	finalAsciiArt := ""
 	for _, line := range lines {
 		// add each line to finalAsciiArt using the LineAsAscii function.
-		finalAsciiArt += LineAsAscii(line, asciiGraph)
+		finalAsciiArt += LineAsAscii(line, color, substring, asciiGraph)
 	}
 	return finalAsciiArt
 }
 
-func LineAsAscii(line string, asciiGraph []string) string {
+func LineAsAscii(line, color, substring string, asciiGraph []string) string {
 	var asciiChars []string
 	finalAsciiArt := ""
+	//substring := "X"
+	substringIndex := 0
 	if line != "" {
-		for _, char := range line {
-			// add each chars to the asciiChars line by line
-			for i := 8; i > 0; i-- {
-				asciiChars = append(asciiChars, string(asciiGraph[findLastLine(char)-i]))
+		if strings.Contains(line, substring) {
+			substringIndex = strings.Index(line, substring)
+		}
+		for idx, char := range line {
+			if idx >= substringIndex && idx < substringIndex+len(substring) {
+				for i := 8; i > 0; i-- {
+					asciiChars = append(asciiChars, color+string(asciiGraph[findLastLine(char)-i])+ColorMap["ColorSTOP"])
+				}
+			} else {
+				for i := 8; i > 0; i-- {
+					asciiChars = append(asciiChars, string(asciiGraph[findLastLine(char)-i]))
+				}
 			}
 		}
 

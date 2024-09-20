@@ -40,20 +40,3 @@ func IsValidSubString(str, subString string) bool {
 func ApplyColor(asciiArt, color string) string {
 	return fmt.Sprintf("%s%s%s", color, asciiArt, ColorMap["ColorSTOP"])
 }
-
-// colorSubstring colors the substring in the ASCII art.
-func ColorSubstring(asciiArt, input, substring, color string) string {
-	coloredArt := asciiArt
-	substringIndex := strings.Index(input, substring)
-	if substringIndex != -1 {
-		asciiLines := strings.Split(asciiArt, "\n")
-		substringLength := len(substring)
-		for i := 0; i < 8; i++ {
-			start := substringIndex * 8
-			end := start + substringLength*8
-			asciiLines[i] = asciiLines[i][:start] + fmt.Sprintf("%s%s%s", color, asciiLines[i][start:end], ColorMap["ColorSTOP"]) + asciiLines[i][end:]
-		}
-		coloredArt = strings.Join(asciiLines, "\n")
-	}
-	return coloredArt
-}

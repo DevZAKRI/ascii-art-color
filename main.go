@@ -28,7 +28,7 @@ var (
 func main() {
 	args := len(os.Args[1:])
 	template := "standard"
-	//color := ColorMap["white"]
+	color := ColorMap["white"]
 	Result := ""
 	fileName := ""
 	substring := ""
@@ -41,7 +41,7 @@ func main() {
 			fmt.Println("Invalid ASCII characters in input")
 		}
 		input := os.Args[1]
-		Result = ascii.Artist(input, template)
+		Result = ascii.Artist(input, template, color, substring)
 		ascii.OutputFinal(Result, fileName)
 	case args == 2:
 		if ascii.IsOutputFlag(os.Args[1]) {
@@ -58,7 +58,7 @@ func main() {
 				fmt.Println("Usage: go run . [OPTION] [STRING] [BANNER]\n\nEX: go run . --output=<fileName.txt> something standard")
 				return
 			}
-			Result = ascii.Artist(input, template)
+			Result = ascii.Artist(input, template, color, substring)
 			ascii.OutputFinal(Result, fileName)
 		} else if ascii.IsColorFlag(os.Args[1]) {
 			if !ascii.IsValidASCII(os.Args[2]) {
@@ -67,7 +67,7 @@ func main() {
 			}
 			input := os.Args[2]
 			color := ColorMap[ascii.IsColor(os.Args[1][8:])]
-			Result = ascii.Artist(input, template)
+			Result = ascii.Artist(input, template, color, substring)
 			Result = ascii.ApplyColor(Result, color)
 			ascii.OutputFinal(Result, fileName)
 
@@ -82,7 +82,7 @@ func main() {
 			}
 			template = Template(os.Args[2])
 			input := os.Args[1]
-			Result = ascii.Artist(input, template)
+			Result = ascii.Artist(input, template, color, substring)
 			ascii.OutputFinal(Result, fileName)
 		}
 	case args == 3:
@@ -106,7 +106,7 @@ func main() {
 			}
 			input := os.Args[2]
 			template = Template(os.Args[3])
-			Result = ascii.Artist(input, template)
+			Result = ascii.Artist(input, template, color, substring)
 			ascii.OutputFinal(Result, fileName)
 		} else if ascii.IsColorFlag(os.Args[1]) {
 			if ascii.IsValidSubString(os.Args[3], os.Args[2]) && !ascii.IsValidBanner(os.Args[3]) {
@@ -115,10 +115,9 @@ func main() {
 					return
 				}
 				input := os.Args[3]
-				Result = ascii.Artist(input, template)
 				substring = os.Args[2]
 				color := ColorMap[ascii.IsColor(os.Args[1][8:])]
-				Result = ascii.ColorSubstring(Result, input, substring, color)
+				Result = ascii.Artist(input, template, color, substring)
 				ascii.OutputFinal(Result, fileName)
 			} else if ascii.IsValidBanner(os.Args[3]) {
 				if !ascii.IsValidASCII(os.Args[2]) {
@@ -127,7 +126,7 @@ func main() {
 				}
 				input := os.Args[2]
 				template = Template(os.Args[3])
-				Result = ascii.Artist(input, template)
+				Result = ascii.Artist(input, template, color, substring)
 				color := ColorMap[ascii.IsColor(os.Args[1][8:])]
 				Result = ascii.ApplyColor(Result, color)
 				ascii.OutputFinal(Result, fileName)
@@ -153,14 +152,13 @@ func main() {
 			if ascii.IsValidSubString(os.Args[3], os.Args[2]) {
 				input := os.Args[3]
 				template = Template(os.Args[4])
-				Result = ascii.Artist(input, template)
 				substring = os.Args[2]
-				Result = ascii.ColorSubstring(Result, input, substring, color)
+				Result = ascii.Artist(input, template, color, substring)
 				ascii.OutputFinal(Result, fileName)
 			} else {
 				input := os.Args[3]
 				template = Template(os.Args[4])
-				Result = ascii.Artist(input, template)
+				Result = ascii.Artist(input, template, color, substring)
 				ascii.OutputFinal(Result, fileName)
 			}
 		} else {
